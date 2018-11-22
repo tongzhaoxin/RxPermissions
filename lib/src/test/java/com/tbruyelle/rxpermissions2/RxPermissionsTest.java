@@ -65,9 +65,9 @@ public class RxPermissionsTest {
         when(rxPermissionsFragment.getActivity()).thenReturn(mActivity);
         when(mRxPermissions.mRxPermissionsFragment.get()).thenReturn(rxPermissionsFragment);
         // Default deny all permissions
-        doReturn(false).when(mRxPermissions).isGranted(anyString());
+        doReturn(false).when(mRxPermissions).isGranted(mActivity, anyString());
         // Default no revoked permissions
-        doReturn(false).when(mRxPermissions).isRevoked(anyString());
+        doReturn(false).when(mRxPermissions).isRevoked(mActivity,anyString());
     }
 
     private Observable<Object> trigger() {
@@ -79,7 +79,7 @@ public class RxPermissionsTest {
     public void subscription_preM() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensure(permission)).subscribe(sub);
 
@@ -93,7 +93,7 @@ public class RxPermissionsTest {
     public void subscription_granted() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED};
 
         trigger().compose(mRxPermissions.ensure(permission)).subscribe(sub);
@@ -109,7 +109,7 @@ public class RxPermissionsTest {
     public void eachSubscription_granted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED};
 
         trigger().compose(mRxPermissions.ensureEach(permission)).subscribe(sub);
@@ -125,7 +125,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_granted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED};
 
         trigger().compose(mRxPermissions.ensureEachCombined(permission)).subscribe(sub);
@@ -141,7 +141,7 @@ public class RxPermissionsTest {
     public void eachSubscription_preM() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEach(permission)).subscribe(sub);
 
@@ -155,7 +155,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_preM() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEachCombined(permission)).subscribe(sub);
 
@@ -169,7 +169,7 @@ public class RxPermissionsTest {
     public void subscription_alreadyGranted() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensure(permission)).subscribe(sub);
 
@@ -183,7 +183,7 @@ public class RxPermissionsTest {
     public void subscription_denied() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_DENIED};
 
         trigger().compose(mRxPermissions.ensure(permission)).subscribe(sub);
@@ -199,7 +199,7 @@ public class RxPermissionsTest {
     public void eachSubscription_denied() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_DENIED};
 
         trigger().compose(mRxPermissions.ensureEach(permission)).subscribe(sub);
@@ -215,7 +215,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_denied() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_DENIED};
 
         trigger().compose(mRxPermissions.ensureEachCombined(permission)).subscribe(sub);
@@ -231,7 +231,7 @@ public class RxPermissionsTest {
     public void subscription_revoked() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isRevoked(permission)).thenReturn(true);
+        when(mRxPermissions.isRevoked(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensure(permission)).subscribe(sub);
 
@@ -245,7 +245,7 @@ public class RxPermissionsTest {
     public void eachSubscription_revoked() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isRevoked(permission)).thenReturn(true);
+        when(mRxPermissions.isRevoked(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEach(permission)).subscribe(sub);
 
@@ -259,7 +259,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_revoked() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isRevoked(permission)).thenReturn(true);
+        when(mRxPermissions.isRevoked(mActivity, permission)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEachCombined(permission)).subscribe(sub);
 
@@ -273,7 +273,7 @@ public class RxPermissionsTest {
     public void subscription_severalPermissions_granted() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_GRANTED};
 
         trigger().compose(mRxPermissions.ensure(permissions)).subscribe(sub);
@@ -289,7 +289,7 @@ public class RxPermissionsTest {
     public void eachSubscription_severalPermissions_granted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_GRANTED};
 
         trigger().compose(mRxPermissions.ensureEach(permissions)).subscribe(sub);
@@ -305,7 +305,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_severalPermissions_granted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_GRANTED};
 
         trigger().compose(mRxPermissions.ensureEachCombined(permissions)).subscribe(sub);
@@ -321,7 +321,7 @@ public class RxPermissionsTest {
     public void subscription_severalPermissions_oneDenied() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED};
 
         trigger().compose(mRxPermissions.ensure(permissions)).subscribe(sub);
@@ -337,8 +337,8 @@ public class RxPermissionsTest {
     public void subscription_severalPermissions_oneRevoked() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
-        when(mRxPermissions.isRevoked(Manifest.permission.CAMERA)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isRevoked(mActivity, Manifest.permission.CAMERA)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensure(permissions)).subscribe(sub);
         mRxPermissions.onRequestPermissionsResult(
@@ -355,8 +355,8 @@ public class RxPermissionsTest {
     public void eachSubscription_severalPermissions_oneAlreadyGranted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
-        when(mRxPermissions.isGranted(Manifest.permission.CAMERA)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Manifest.permission.CAMERA)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEach(permissions)).subscribe(sub);
         mRxPermissions.onRequestPermissionsResult(
@@ -377,8 +377,8 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_severalPermissions_oneAlreadyGranted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
-        when(mRxPermissions.isGranted(Manifest.permission.CAMERA)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Manifest.permission.CAMERA)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEachCombined(permissions)).subscribe(sub);
         mRxPermissions.onRequestPermissionsResult(
@@ -399,7 +399,7 @@ public class RxPermissionsTest {
     public void eachSubscription_severalPermissions_oneDenied() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED};
 
         trigger().compose(mRxPermissions.ensureEach(permissions)).subscribe(sub);
@@ -415,7 +415,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_severalPermissions_oneDenied() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED};
 
         trigger().compose(mRxPermissions.ensureEachCombined(permissions)).subscribe(sub);
@@ -431,8 +431,8 @@ public class RxPermissionsTest {
     public void eachSubscription_severalPermissions_oneRevoked() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
-        when(mRxPermissions.isRevoked(Manifest.permission.CAMERA)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isRevoked(mActivity, Manifest.permission.CAMERA)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEach(permissions)).subscribe(sub);
         mRxPermissions.onRequestPermissionsResult(
@@ -449,8 +449,8 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_severalPermissions_oneRevoked() {
         TestObserver<Permission> sub = new TestObserver<>();
         String[] permissions = new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAMERA};
-        when(mRxPermissions.isGranted(Matchers.<String>anyVararg())).thenReturn(false);
-        when(mRxPermissions.isRevoked(Manifest.permission.CAMERA)).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity, Matchers.<String>anyVararg())).thenReturn(false);
+        when(mRxPermissions.isRevoked(mActivity, Manifest.permission.CAMERA)).thenReturn(true);
 
         trigger().compose(mRxPermissions.ensureEachCombined(permissions)).subscribe(sub);
         mRxPermissions.onRequestPermissionsResult(
@@ -467,7 +467,7 @@ public class RxPermissionsTest {
     public void subscription_trigger_granted() {
         TestObserver<Boolean> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED};
         PublishSubject<Object> trigger = PublishSubject.create();
 
@@ -485,7 +485,7 @@ public class RxPermissionsTest {
     public void eachSubscription_trigger_granted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED};
         PublishSubject<Object> trigger = PublishSubject.create();
 
@@ -503,7 +503,7 @@ public class RxPermissionsTest {
     public void eachSubscriptionCombined_trigger_granted() {
         TestObserver<Permission> sub = new TestObserver<>();
         String permission = Manifest.permission.READ_PHONE_STATE;
-        when(mRxPermissions.isGranted(permission)).thenReturn(false);
+        when(mRxPermissions.isGranted(mActivity, permission)).thenReturn(false);
         int[] result = new int[]{PackageManager.PERMISSION_GRANTED};
         PublishSubject<Object> trigger = PublishSubject.create();
 
@@ -568,7 +568,7 @@ public class RxPermissionsTest {
     public void shouldShowRequestPermissionRationale_oneDeniedRationale() {
         when(mRxPermissions.isMarshmallow()).thenReturn(true);
         Activity activity = mock(Activity.class);
-        when(mRxPermissions.isGranted("p1")).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity,"p1")).thenReturn(true);
         when(activity.shouldShowRequestPermissionRationale("p2")).thenReturn(true);
 
         TestObserver<Boolean> sub = new TestObserver<>();
@@ -585,7 +585,7 @@ public class RxPermissionsTest {
     public void shouldShowRequestPermissionRationale_oneDeniedNotRationale() {
         when(mRxPermissions.isMarshmallow()).thenReturn(true);
         Activity activity = mock(Activity.class);
-        when(mRxPermissions.isGranted("p2")).thenReturn(true);
+        when(mRxPermissions.isGranted(mActivity,"p2")).thenReturn(true);
 
         TestObserver<Boolean> sub = new TestObserver<>();
         mRxPermissions.shouldShowRequestPermissionRationale(activity, "p1", "p2")
@@ -599,10 +599,10 @@ public class RxPermissionsTest {
     @Test
     public void isGranted_preMarshmallow() {
         // unmock isGranted
-        doCallRealMethod().when(mRxPermissions).isGranted(anyString());
+        doCallRealMethod().when(mRxPermissions).isGranted(mActivity,anyString());
         doReturn(false).when(mRxPermissions).isMarshmallow();
 
-        boolean granted = mRxPermissions.isGranted("p");
+        boolean granted = mRxPermissions.isGranted(mActivity,"p");
 
         assertTrue(granted);
     }
@@ -611,11 +611,11 @@ public class RxPermissionsTest {
     @TargetApi(Build.VERSION_CODES.M)
     public void isGranted_granted() {
         // unmock isGranted
-        doCallRealMethod().when(mRxPermissions).isGranted(anyString());
+        doCallRealMethod().when(mRxPermissions).isGranted(mActivity,anyString());
         doReturn(true).when(mRxPermissions).isMarshmallow();
         when(mActivity.checkSelfPermission("p")).thenReturn(PackageManager.PERMISSION_GRANTED);
 
-        boolean granted = mRxPermissions.isGranted("p");
+        boolean granted = mRxPermissions.isGranted(mActivity,"p");
 
         assertTrue(granted);
     }
@@ -624,11 +624,11 @@ public class RxPermissionsTest {
     @TargetApi(Build.VERSION_CODES.M)
     public void isGranted_denied() {
         // unmock isGranted
-        doCallRealMethod().when(mRxPermissions).isGranted(anyString());
+        doCallRealMethod().when(mRxPermissions).isGranted(mActivity,anyString());
         doReturn(true).when(mRxPermissions).isMarshmallow();
         when(mActivity.checkSelfPermission("p")).thenReturn(PackageManager.PERMISSION_DENIED);
 
-        boolean granted = mRxPermissions.isGranted("p");
+        boolean granted = mRxPermissions.isGranted(mActivity,"p");
 
         assertFalse(granted);
     }
@@ -636,10 +636,10 @@ public class RxPermissionsTest {
     @Test
     public void isRevoked_preMarshmallow() {
         // unmock isRevoked
-        doCallRealMethod().when(mRxPermissions).isRevoked(anyString());
+        doCallRealMethod().when(mRxPermissions).isRevoked(mActivity, anyString());
         doReturn(false).when(mRxPermissions).isMarshmallow();
 
-        boolean revoked = mRxPermissions.isRevoked("p");
+        boolean revoked = mRxPermissions.isRevoked(mActivity, "p");
 
         assertFalse(revoked);
     }
@@ -648,13 +648,13 @@ public class RxPermissionsTest {
     @TargetApi(Build.VERSION_CODES.M)
     public void isRevoked_true() {
         // unmock isRevoked
-        doCallRealMethod().when(mRxPermissions).isRevoked(anyString());
+        doCallRealMethod().when(mRxPermissions).isRevoked(mActivity, anyString());
         doReturn(true).when(mRxPermissions).isMarshmallow();
         PackageManager pm = mock(PackageManager.class);
         when(mActivity.getPackageManager()).thenReturn(pm);
         when(pm.isPermissionRevokedByPolicy(eq("p"), anyString())).thenReturn(true);
 
-        boolean revoked = mRxPermissions.isRevoked("p");
+        boolean revoked = mRxPermissions.isRevoked(mActivity, "p");
 
         assertTrue(revoked);
     }
@@ -663,13 +663,13 @@ public class RxPermissionsTest {
     @TargetApi(Build.VERSION_CODES.M)
     public void isGranted_false() {
         // unmock isRevoked
-        doCallRealMethod().when(mRxPermissions).isRevoked(anyString());
+        doCallRealMethod().when(mRxPermissions).isRevoked(mActivity, anyString());
         doReturn(true).when(mRxPermissions).isMarshmallow();
         PackageManager pm = mock(PackageManager.class);
         when(mActivity.getPackageManager()).thenReturn(pm);
         when(pm.isPermissionRevokedByPolicy(eq("p"), anyString())).thenReturn(false);
 
-        boolean revoked = mRxPermissions.isRevoked("p");
+        boolean revoked = mRxPermissions.isRevoked(mActivity, "p");
 
         assertFalse(revoked);
     }
